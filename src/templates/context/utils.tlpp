@@ -1,0 +1,11 @@
+#include 'tlpp-core.th'
+#include 'tlpp-rest.th'
+#include "tlpp-object.th"
+
+Namespace namespace.nomedocomponente.utils
+Class NomedocomponenteUtils
+	Public Method New() as object
+endclass
+
+Method New() Class NomedocomponenteUtils
+Return Self

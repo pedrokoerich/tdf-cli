@@ -1,0 +1,70 @@
+#include "tlpp-core.th"
+
+Namespace namespace.nomedocomponente
+Using Namespace namespace.nomedocomponente.utils
+
+Class NomedocomponenteService
+   Public Data jResponse as Json
+
+    Public Method new() as Object
+    Public Method getNomedocomponente() as Logical
+    Public Method deleteNomedocomponente() as Logical
+    Public Method putNomedocomponente() as Logical
+    Public Method postNomedocomponente() as Logical
+EndClass
+
+Method new() as Object Class NomedocomponenteService
+    ::jResponse := JsonObject():new()
+Return self
+
+Method getNomedocomponente() as Json Class NomedocomponenteService
+   Local oData as Object
+
+   oData := NomedocomponenteData():new("GET")
+   oData:getNomedocomponente("1=1")
+
+   If oData:lOk
+      ::jResponse := oData:gtJsonObjResponse()
+   Else
+      ::jResponse := SetRestFault(oData:GetCode(), oData:GetMessage())
+   EndIf
+Return ::jResponse
+
+Method deleteNomedocomponente() as Json Class NomedocomponenteService
+   Local oData as Object
+
+   oData := NomedocomponenteData():new("DELETE")
+   oData:deleteNomedocomponente()
+
+   If oData:lOk
+      ::jResponse := oData:gtJsonObjResponse()
+   Else
+      ::jResponse := SetRestFault(oData:GetCode(), oData:GetMessage())
+   EndIf
+Return ::jResponse
+
+Method putNomedocomponente() as Json Class NomedocomponenteService
+   Local oData as Object
+
+   oData := NomedocomponenteData():new("PUT")
+   oData:putNomedocomponente()
+
+   If oData:lOk
+      ::jResponse := oData:gtJsonObjResponse()
+   Else
+      ::jResponse := SetRestFault(oData:GetCode(), oData:GetMessage())
+   EndIf
+Return ::jResponse
+
+Method postNomedocomponente() as Json Class NomedocomponenteService
+   Local oData as Object
+
+   oData := NomedocomponenteData():new("POST")
+   oData:postNomedocomponente()
+
+   If oData:lOk
+      ::jResponse := oData:gtJsonObjResponse()
+   Else
+      ::jResponse := SetRestFault(oData:GetCode(), oData:GetMessage())
+   EndIf
+Return ::jResponse

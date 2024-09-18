@@ -1,0 +1,14 @@
+/*-----------------------------------------------------------------------*
+| Func:  SigaPCI                                                       	 |
+| Data:  {{currentDate}}                                                      |
+| Desc:  Função Responsável pela estrutura do Módulo SIGAPCI             |
+*-----------------------------------------------------------------------*/
+User Function SigaPCI( Par01 )
+	MsApp():New('SIGAESP')
+	oApp:cInternet := Par01
+	oApp:CreateEnv()
+	oApp:RunApp()
+Return 
+
+User Function EspNome()
+Return('SIGAPCI')

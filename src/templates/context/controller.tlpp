@@ -1,0 +1,44 @@
+#include 'tlpp-core.th'
+
+Namespace namespace.nomedocomponente
+Using Namespace namespace.nomedocomponente.utils
+
+Class NomedocomponenteController
+   Data jResponse as Json
+   Data oService  as Object
+
+   Public Method new() as Object
+
+   @Get(endpoint="/namespaceEndpoint/nomedocomponente/api/v1", description="Método GET do contexto Nomedocomponente")
+   Public Method getNomedocomponente() as Logical
+
+   @Delete("/namespaceEndpoint/nomedocomponente/api/v1/:id", description="Método DELETE do contexto Nomedocomponente")
+   Public Method deleteNomedocomponente() as Logical
+
+   @Put("/namespaceEndpoint/nomedocomponente/api/v1/:id", description="Método PUT do contexto Nomedocomponente")
+   Public Method putNomedocomponente() as Logical
+
+   @Post("/namespaceEndpoint/nomedocomponente/api/v1", description="Método POST do contexto Nomedocomponente")
+   Public Method postNomedocomponente() as Logical
+EndClass
+
+Method new() as Object Class NomedocomponenteController
+   ::oService  := NomedocomponenteService():new()
+   ::jResponse := JsonObject():new()
+Return self
+
+Method getNomedocomponente() as Logical Class NomedocomponenteController
+   ::jResponse := ::oService:getNomedocomponente()
+Return .T.
+
+Method deleteNomedocomponente() as Logical Class NomedocomponenteController
+   ::jResponse := ::oService:deleteNomedocomponente()
+Return .T.
+
+Method putNomedocomponente() as Logical Class NomedocomponenteController
+   ::jResponse := ::oService:putNomedocomponente()
+Return .T.
+
+Method postNomedocomponente() as Logical Class NomedocomponenteController
+   ::jResponse := ::oService:postNomedocomponente()
+Return .T.
