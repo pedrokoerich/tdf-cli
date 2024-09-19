@@ -1,6 +1,6 @@
 {
   "name": "tdf-cli",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "TOTVS Developer Framework CLI",
   "types": "build/types/types.d.ts",
   "bin": {
@@ -16,7 +16,8 @@
     "test": "jest",
     "watch": "jest --watch",
     "snapupdate": "jest --updateSnapshot",
-    "coverage": "jest --coverage"
+    "coverage": "jest --coverage",
+    "postinstall": "node ./src/commands/tdf-cli.ts"
   },
   "files": [
     "build",
