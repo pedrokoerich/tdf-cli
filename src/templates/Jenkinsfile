@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+    environment {
+        //Path do manageRPO
+        //Exemplo: EXEC_TROCA_RPO = '& "D:\\TOTVS12\\Microsiga\\Protheus\\managerRPO_rpo_custom\\managerRPO.ps1"'
+        EXEC_TROCA_RPO = '& ""'
+        //Path do appserver
+        //Exemplo: EXEC_COMPILER = '"D:\\TOTVS12\\Microsiga\\Protheus\\bin\\appserver_comp\\appserver.exe"'+" -compile -files=${WORKSPACE}\\src -includes=${WORKSPACE}\\packages\\includes -env=atualizarpo -outreport=${WORKSPACE} "
+        EXEC_COMPILER = '""'+" -compile -files=${WORKSPACE}\\src -includes=${WORKSPACE}\\packages\\includes -env=atualizarpo -outreport=${WORKSPACE} "
+        //Exemplo: EXEC_DEFRAG = '"D:\\TOTVS12\\Microsiga\\Protheus\\bin\\appserver_comp\\appserver.exe"'+" -console -compile -defragrpo -env=atualizarpo"
+        EXEC_DEFRAG = '""'+" -console -compile -defragrpo -env=atualizarpo"
+    }
+    ///---
+    stages {
+        stage('Compilando Fontes') {
+            steps {
+                /* groovylint-disable-next-line DuplicateStringLiteral */
+                // echo 'Compilando Fontes'
+                // echo env.EXEC_COMPILER
+                // asdf
+                // powershell returnStatus: true, script: '.\\build.ps1'
+                bat env.EXEC_COMPILER
+            }
+        }
+        // stage('Verificando compilação') {
+        //     steps {
+        //         script {
+        //             def logz = currentBuild.rawBuild.getLog(10000);
+        //             def result = logz.find { it.contains('Errors(14)') }
+        //             if (result) {
+        //                 error ('Failing due to ' + result)
+        //             }
+        //         }
+        //     }
+        // }
+        stage('Desfragmentando RPO') {
+            steps { 
+                /* groovylint-disable-next-line DuplicateStringLiteral */
+                // echo 'Compilando Fontes'
+                // echo env.PATH_FONTES
+                // powershell returnStatus: true, script: '.\\build.ps1'
+                bat env.EXEC_DEFRAG
+            }
+        }
+        stage('Trocando RPO na producao') {
+            steps {
+            // echo "fim"
+            //  powershell -file EXEC_TROCA_RPO
+             powershell returnStatus: true, script: EXEC_TROCA_RPO
+            // echo 'Trocando RPO na produção'
+            // println(WORKSPACE)
+            //   bat "xcopy /y c:\\webapp\\target\\webapp.war ..."
+            // powershell returnStatus: true, script: '.\\build.ps1'
+            }
+        }
+    }
+}

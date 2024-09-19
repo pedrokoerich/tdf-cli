@@ -1,11 +1,10 @@
 {
   "name": "tdf-cli",
   "version": "0.0.1",
-  "description": "tdf-cli CLI",
-  "private": true,
+  "description": "TOTVS Developer Framework CLI",
   "types": "build/types/types.d.ts",
   "bin": {
-    "tdf-cli": "bin/tdf-cli"
+    "tdf": "bin/tdf-cli"
   },
   "scripts": {
     "clean-build": "rimraf -rf ./build",

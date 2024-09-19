@@ -7,6 +7,7 @@ module.exports = (toolbox: GluegunToolbox) => {
   toolbox.newProject = async (projectName: string) => {
     const baseDir = path.join(process.cwd(), projectName)
     const srcDir = path.join(baseDir, 'src')
+    //const packagesDir = path.join(baseDir, 'packages')
     const templateDir = path.join(__dirname, '..', 'templates') // Caminho para a pasta de templates
 
     // Perguntar o namespace ao usuário
@@ -68,7 +69,9 @@ module.exports = (toolbox: GluegunToolbox) => {
       'src/context',
       'src/lib',
       'src/schedules',
-      'src/workflows'
+      'src/workflows',
+      'packages/includes',
+      'packages/rdmakes'
     ]
 
     directoriesToCreate.forEach(dir => {
@@ -83,10 +86,15 @@ module.exports = (toolbox: GluegunToolbox) => {
     const readmeDestPath = path.join(baseDir, 'readme.md')
     copyTemplateFile(readmeTemplatePath, readmeDestPath, replacements, 'utf-8');
 
-    // Copiar e substituir conteúdo do readme.md
+    // Copiar e substituir conteúdo do .gitignore
     const gitignoreTemplatePath = path.join(templateDir, '.gitignore')
     const gitognoreDestPath = path.join(baseDir, '.gitignore')
     copyTemplateFile(gitignoreTemplatePath, gitognoreDestPath, replacements, 'utf-8');
+
+    // Copiar e substituir conteúdo do Jenkinsfile
+    const jenkinsTemplatePath = path.join(templateDir, 'Jenkinsfile')
+    const jenkinsDestPath = path.join(baseDir, 'Jenkinsfile')
+    copyTemplateFile(jenkinsTemplatePath, jenkinsDestPath, replacements, 'utf-8');
 
     // Copiar e substituir conteúdo do sigapci.tlpp
     const sigapciTemplatePath = path.join(templateDir, 'src', 'sigapci.tlpp')

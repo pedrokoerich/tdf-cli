@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as iconv from 'iconv-lite'; // Para codificação Windows-1252
 
 module.exports = (toolbox: GluegunToolbox) => {
-  toolbox.generateComponent = async (componentName: string) => {
+  toolbox.generateContext = async (componentName: string) => {
     try {
       // Ler o namespace do project-info.json
       const projectInfoPath = path.join(process.cwd(), 'project-info.json');
@@ -22,7 +22,7 @@ module.exports = (toolbox: GluegunToolbox) => {
       const { description } = await toolbox.prompt.ask({
         type: 'input',
         name: 'description',
-        message: 'Informe uma descrição para o componente:',
+        message: 'Informe uma descrição para o contexto:',
       });
 
       if (!description) {
@@ -45,77 +45,67 @@ module.exports = (toolbox: GluegunToolbox) => {
         mvc: `${componentName}.mvc.tlpp`,
       };
 
-      console.log('namespaceEndpoint', namespaceEndpoint);
-
-      // Ajustar o caminho dos templates para voltar uma pasta
       const templateDir = path.join(process.cwd(), '..', 'src', 'templates', 'context');
       toolbox.print.info(`Buscando templates no caminho: ${templateDir}`);
-
-      // Definir mapeamento dinâmico de métodos e classes
-      const replacementsMap = {
-        controller: {
-          class: 'NomedocomponenteController',
-          methods: ['get', 'post', 'put', 'delete'],
-        },
-        service: {
-          class: 'NomedocomponenteService',
-          methods: ['get', 'post', 'put', 'delete'],
-        },
-        data: {
-          class: 'NomedocomponenteData',
-          methods: ['get', 'post', 'put', 'delete'],
-        },
-        utils: {
-          class: 'NomedocomponenteUtils',
-          methods: [],
-        }
-      };
 
       // Função para substituir conteúdo dinâmico nos arquivos
       const replaceDynamicContent = (content: string, folderType: string) => {
         const capitalizedComponent = componentName.charAt(0).toUpperCase() + componentName.slice(1);
         const lowerComponent = componentName.toLowerCase();
-        const replacement = replacementsMap[folderType];
-      
+        const replacementsMap = {
+          controller: {
+            class: 'NomedocomponenteController',
+            methods: ['get', 'post', 'put', 'delete'],
+          },
+          service: {
+            class: 'NomedocomponenteService',
+            methods: ['get', 'post', 'put', 'delete'],
+          },
+          data: {
+            class: 'NomedocomponenteData',
+            methods: ['get', 'post', 'put', 'delete'],
+          },
+          utils: {
+            class: 'NomedocomponenteUtils',
+            methods: [],
+          },
+        };
+
         let updatedContent = content
-          .replace(/{{namespace}}/g, namespace) // Substitui o namespace normal
-          .replace(/namespaceEndpoint/g, namespaceEndpoint) // Substitui 'namespaceEndpoint' pelo valor com barras
-          .replace(/nomedocomponente/g, lowerComponent) // Nome do componente em minúsculas
-          .replace(/Nomedocomponente/g, capitalizedComponent) // Nome do componente com a primeira letra maiúscula
-          .replace(/Descrição do componente informada no momento da geração/g, description) // Substitui a descrição
-          .replace(/Ã©/g, 'é') // Corrige acentos
-          .replace(/Ã§/g, 'ç'); // Corrige acentos
-        
-        // Substituir o nome da classe, se aplicável
+          .replace(/{{namespace}}/g, namespace)
+          .replace(/namespaceEndpoint/g, namespaceEndpoint)
+          .replace(/nomedocomponente/g, lowerComponent)
+          .replace(/Nomedocomponente/g, capitalizedComponent)
+          .replace(/Descrição do componente informada no momento da geração/g, description)
+          .replace(/Ã©/g, 'é')
+          .replace(/Ã§/g, 'ç');
+
+        const replacement = replacementsMap[folderType];
+
         if (replacement?.class) {
           updatedContent = updatedContent.replace(replacement.class, `${capitalizedComponent}${folderType.charAt(0).toUpperCase() + folderType.slice(1)}`);
         }
-      
-        // Substituir os métodos GET, POST, PUT, DELETE, se aplicável
+
         replacement?.methods.forEach(method => {
           const methodPattern = new RegExp(`${method}Nomedocomponente`, 'g');
           updatedContent = updatedContent.replace(methodPattern, `${method}${capitalizedComponent}`);
         });
-      
+
         return updatedContent;
       };
-      
+
       // Função para copiar os arquivos do template
       const copyTemplateFile = (src: string, dest: string, folderType: string) => {
         if (!fs.existsSync(src)) {
           toolbox.print.error(`Template ${src} não encontrado.`);
           return;
         }
-      
-        // Ler o conteúdo do arquivo com a codificação Windows-1252
+
         let content = iconv.decode(fs.readFileSync(src), 'windows-1252');
         content = replaceDynamicContent(content, folderType);
-      
-        // Escrever o arquivo com codificação Windows-1252
         const encodedContent = iconv.encode(content, 'windows-1252');
         fs.writeFileSync(dest, encodedContent);
       };
-
 
       // Criar pastas e arquivos
       folders.forEach((folder) => {
@@ -130,13 +120,12 @@ module.exports = (toolbox: GluegunToolbox) => {
         toolbox.print.info(`Template source: ${templateFilePath}`);
         toolbox.print.info(`Destination path: ${destFilePath}`);
 
-        // Copiar arquivo do template para o destino
         copyTemplateFile(templateFilePath, destFilePath, folder);
       });
 
-      toolbox.print.success(`Componente ${componentName} criado com sucesso!`);
+      toolbox.print.success(`Contexto ${componentName} criado com sucesso!`);
     } catch (error) {
-      toolbox.print.error(`Erro ao criar o componente: ${error.message}`);
+      toolbox.print.error(`Erro ao criar o contexto: ${error.message}`);
     }
   };
 };
