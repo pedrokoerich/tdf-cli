@@ -6,58 +6,23 @@ import * as iconv from 'iconv-lite'; // Para codificação Windows-1252
 module.exports = (toolbox: GluegunToolbox) => {
   toolbox.generateComponent = async (componentType: string, componentName: string) => {
     try {
-      // Definir tipos válidos de componentes
-      const validTypes = ['service', 'controller', 'data', 'utils', 'mvc','s', 'c', 'd', 'u', 'm'];
+      const validTypes = ['service', 'controller', 'data', 'utils', 'mvc', 's', 'c', 'd', 'u', 'm'];
       if (!validTypes.includes(componentType)) {
         toolbox.print.error(`Tipo de componente inválido. Tipos válidos: ${validTypes.join(', ')}`);
         return;
       }
 
-      switch (componentType) {
-        case 's':
-          componentType = 'service';
-          break;
-        case 'c':
-          componentType = 'controller';
-          break;
-        case 'd':
-          componentType = 'data';
-          break;
-        case 'u':
-          componentType = 'utils';
-          break;
-        case 'm':
-          componentType = 'mvc';
-          break;
-      }
+      // Mapear os tipos abreviados para completos
+      const typeMap = { s: 'service', c: 'controller', d: 'data', u: 'utils', m: 'mvc' };
+      componentType = typeMap[componentType] || componentType;
 
-      // Ler o namespace do project-info.json
-      const findProjectRoot = (param) => {
-        let currentDir = process.cwd();
-        while (!fs.existsSync(path.join(currentDir, param))) {
-          const parentDir = path.resolve(currentDir, '..');
-          if (currentDir === parentDir) {
-            // Chegou na raiz do sistema de arquivos sem encontrar o arquivo
-            return null;
-          }
-          currentDir = parentDir;
-        }
-        return currentDir;
-      };
-      
-      let projectRoot = findProjectRoot('project-info.json');
+      const projectRoot = findProjectRoot('project-info.json');
       if (!projectRoot) {
         toolbox.print.error('Arquivo project-info.json não encontrado.');
         return;
       }
-      
+
       const projectInfoPath = path.join(projectRoot, 'project-info.json');
-
-      if (!fs.existsSync(projectInfoPath)) {
-        toolbox.print.error('Arquivo project-info.json não encontrado.');
-        return;
-      }
-
       const projectInfo = JSON.parse(fs.readFileSync(projectInfoPath, 'utf-8'));
       const namespace = projectInfo.namespace;
       const namespaceEndpoint = namespace.replace(/\./g, '/');
@@ -74,32 +39,22 @@ module.exports = (toolbox: GluegunToolbox) => {
         return;
       }
 
-      toolbox.print.info(`Descrição fornecida: ${description}`);
-
-      // Definir o caminho base para o componente
-      // Definir o caminho base para o componente no diretório atual
       const baseDir = process.cwd();
-
-
-      // Definir o template e o arquivo de destino
       const templateFile = `${namespace}.${componentName}.${componentType}.tlpp`;
-      let templateDir = findProjectRoot(`bin`);
-      if (!templateDir) {
-        toolbox.print.error(`Arquivo ${componentType}.tlpp não encontrado.`);
-        return
-      }
-      const templateFilePath = path.join(templateDir, 'src','templates', 'context',`${componentType}.tlpp`);      
+
+      // Caminho da pasta de templates
+      const templateDir = findProjectRoot('bin');
+      const templateFilePath = path.join(templateDir, 'src', 'templates', 'context', `${componentType}.tlpp`);
       const destFilePath = path.join(baseDir, templateFile);
 
       toolbox.print.info(`Template source: ${templateFilePath}`);
       toolbox.print.info(`Destination path: ${destFilePath}`);
 
-      // Função para substituir conteúdo dinâmico
       const replaceDynamicContent = (content: string) => {
         const capitalizedComponent = componentName.charAt(0).toUpperCase() + componentName.slice(1);
         const lowerComponent = componentName.toLowerCase();
 
-        let updatedContent = content
+        return content
           .replace(/{{namespace}}/g, namespace)
           .replace(/namespaceEndpoint/g, namespaceEndpoint)
           .replace(/nomedocomponente/g, lowerComponent)
@@ -107,11 +62,8 @@ module.exports = (toolbox: GluegunToolbox) => {
           .replace(/Descrição do componente informada no momento da geração/g, description)
           .replace(/Ã©/g, 'é')
           .replace(/Ã§/g, 'ç');
-
-        return updatedContent;
       };
 
-      // Função para copiar o arquivo do template
       const copyTemplateFile = (src: string, dest: string) => {
         if (!fs.existsSync(src)) {
           toolbox.print.error(`Template ${src} não encontrado.`);
@@ -124,16 +76,25 @@ module.exports = (toolbox: GluegunToolbox) => {
         fs.writeFileSync(dest, encodedContent);
       };
 
-      // Criar diretório e copiar o arquivo
       if (!fs.existsSync(baseDir)) {
         fs.mkdirSync(baseDir, { recursive: true });
       }
 
       copyTemplateFile(templateFilePath, destFilePath);
-
       toolbox.print.success(`Componente ${componentName} (${componentType}) criado com sucesso!`);
     } catch (error) {
       toolbox.print.error(`Erro ao criar o componente: ${error.message}`);
     }
+  };
+
+  // Função auxiliar para encontrar o diretório raiz do projeto
+  const findProjectRoot = (fileName: string) => {
+    let currentDir = process.cwd();
+    while (!fs.existsSync(path.join(currentDir, fileName))) {
+      const parentDir = path.resolve(currentDir, '..');
+      if (currentDir === parentDir) return null;
+      currentDir = parentDir;
+    }
+    return currentDir;
   };
 };

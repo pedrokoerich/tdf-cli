@@ -1,29 +1,70 @@
 import { GluegunToolbox } from "gluegun";
+const { prompt } = require('enquirer');
 
 module.exports = {
   name: 'generate',
   alias: ['g'],
   run: async (toolbox: GluegunToolbox) => {
-    const { parameters, print, generateContext, generateComponent } = toolbox;
+    const { print, generateContext, generateComponent } = toolbox;
 
-    const [componentType, componentName] = parameters.array || [];
-    console.log(parameters.array);
+    // Função para mostrar as opções e capturar a escolha do usuário com Enquirer
+    const showMenu = async (message: string, choices: string[]): Promise<string> => {
+      const response = await prompt({
+        type: 'select',
+        name: 'option',
+        message,
+        choices,
+      });
+      return response.option;
+    };
 
-    if (!componentType || !componentName) {
-      print.error('Uso: generate [context/component] [tipo] [nome]');
-      return;
+    // Menu principal: escolha entre Context ou Component
+    const mainMenuOptions = [
+      'Context: Será gerado um contexto dentro do seu projeto na pasta context',
+      'Component: Será gerado um componente específico dentro da pasta context'
+    ];
+
+    const mainMenuChoice = await showMenu('Selecione o que deseja gerar:', mainMenuOptions);
+
+    if (mainMenuChoice.startsWith('Context')) {
+      // Opção Context selecionada
+      const contextName = await prompt({
+        type: 'input',
+        name: 'contextName',
+        message: 'Informe o nome do contexto (ex: Ordem de Serviço, Projetos, etc):'
+      });
+
+      if (!contextName.contextName) {
+        console.log('Nome do contexto inválido.');
+        process.exit();
+      }
+
+      // Gerar o contexto
+      await generateContext(contextName.contextName);
+      print.success(`Contexto ${contextName.contextName} gerado com sucesso!`);
+    } else if (mainMenuChoice.startsWith('Component')) {
+      // Opção Component selecionada
+      const componentMenuOptions = ['Controller', 'Service', 'Data', 'Utils', 'MVC'];
+
+      const componentMenuChoice = await showMenu('Selecione o componente que deseja gerar:', componentMenuOptions);
+      const componentType = componentMenuChoice.toLowerCase();
+
+      const contextName = await prompt({
+        type: 'input',
+        name: 'contextName',
+        message: 'Informe o nome do contexto onde o componente será gerado:'
+      });
+
+      if (!contextName.contextName) {
+        console.log('Nome do contexto inválido.');
+        process.exit();
+      }
+
+      // Gerar o componente
+      await generateComponent(componentType, contextName.contextName);
+      print.success(`Componente ${componentType} gerado com sucesso no contexto ${contextName.contextName}!`);
     }
 
-    const contextActions = ['context', 'c'];
-    const componentActions = ['service', 'controller', 'data', 'utils', 'mvc', 's', 'c', 'd', 'u', 'm'];
-    
-    if (contextActions.includes(componentType)) {
-      await generateContext(componentName);
-    } else if (componentActions.includes(componentType)) {
-      await generateComponent(componentType, componentName);
-    } else {
-      print.error('Ação inválida. Use "context" ou "component".');
-    }
-    
+    process.exit();
   },
 };
