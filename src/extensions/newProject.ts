@@ -2,12 +2,12 @@ import { GluegunToolbox } from 'gluegun'
 import * as fs from 'fs'
 import * as path from 'path'
 import * as iconv from 'iconv-lite'
+import chalk from 'chalk'
 
-module.exports = (toolbox: GluegunToolbox) => {
+export default (toolbox: GluegunToolbox) => {
   toolbox.newProject = async (projectName: string) => {
     const baseDir = path.join(process.cwd(), projectName)
     const srcDir = path.join(baseDir, 'src')
-    //const packagesDir = path.join(baseDir, 'packages')
     const templateDir = path.join(__dirname, '..', 'templates') // Caminho para a pasta de templates
 
     // Perguntar o namespace ao usuário
@@ -42,12 +42,12 @@ module.exports = (toolbox: GluegunToolbox) => {
       } else {
         content = fs.readFileSync(templateFilePath, 'utf-8'); // Lê em UTF-8 por padrão
       }
-    
+
       // Substituições dinâmicas no conteúdo
       Object.keys(replacements).forEach(key => {
         content = content.replace(new RegExp(`{{${key}}}`, 'g'), replacements[key]);
       });
-    
+
       // Se for Windows-1252, codifica e salva o arquivo com essa codificação
       if (encoding === 'windows-1252') {
         const encodedContent = iconv.encode(content, 'windows-1252');
@@ -55,6 +55,10 @@ module.exports = (toolbox: GluegunToolbox) => {
       } else {
         fs.writeFileSync(destFilePath, content, 'utf-8'); // Salva com UTF-8
       }
+
+      // Exibe o caminho e tamanho do arquivo criado com "CREATE" e cor verde
+      const stats = fs.statSync(destFilePath);
+      console.log(chalk.green(`CREATE ${destFilePath} (${stats.size} bytes)`));
     };
 
     // Substituições dinâmicas para os templates
@@ -79,6 +83,7 @@ module.exports = (toolbox: GluegunToolbox) => {
       if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(dirPath, { recursive: true })
       }
+      console.log(chalk.green(`CREATE ${dirPath}`)); // Usando "CREATE" e cor verde
     })
 
     // Copiar e substituir conteúdo do readme.md
@@ -101,6 +106,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     const sigapciDestPath = path.join(srcDir, 'sigapci.tlpp')
     copyTemplateFile(sigapciTemplatePath, sigapciDestPath, replacements, 'windows-1252');
 
-    console.log(`Projeto ${projectName} gerado com sucesso na pasta ${baseDir}`)
+    // Mensagem final de sucesso com o check verde
+    console.log(chalk.green.bold(`✔ Projeto ${projectName} gerado com sucesso na pasta ${baseDir}`));
   }
 }

@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as iconv from 'iconv-lite'; // Para codificação Windows-1252
 
-module.exports = (toolbox: GluegunToolbox) => {
+export default (toolbox: GluegunToolbox) => {
   toolbox.generateContext = async (componentName: string) => {
     try {
       const projectRoot = findProjectRoot('project-info.json');
@@ -42,8 +42,6 @@ module.exports = (toolbox: GluegunToolbox) => {
         mvc: `${componentName}.mvc.tlpp`,
       };
 
-      toolbox.print.info(`Buscando templates no caminho: ${templateDir}`);
-
       const replaceDynamicContent = (content: string, folderType: string) => {
         const capitalizedComponent = componentName.charAt(0).toUpperCase() + componentName.slice(1);
         const lowerComponent = componentName.toLowerCase();
@@ -53,9 +51,7 @@ module.exports = (toolbox: GluegunToolbox) => {
           .replace(/namespaceEndpoint/g, namespaceEndpoint)
           .replace(/nomedocomponente/g, lowerComponent)
           .replace(/Nomedocomponente/g, capitalizedComponent)
-          .replace(/Descrição do componente informada no momento da geração/g, description)
-          .replace(/Ã©/g, 'é')
-          .replace(/Ã§/g, 'ç');
+          .replace(/Descrição do componente informada no momento da geração/g, description);
       };
 
       const copyTemplateFile = (src: string, dest: string, folderType: string) => {
@@ -68,19 +64,21 @@ module.exports = (toolbox: GluegunToolbox) => {
         content = replaceDynamicContent(content, folderType);
         const encodedContent = iconv.encode(content, 'windows-1252');
         fs.writeFileSync(dest, encodedContent);
+
+        // Obter o tamanho do arquivo
+        const fileSize = fs.statSync(dest).size;
+        toolbox.print.info(`CREATE ${dest} (${(fileSize / 1024).toFixed(2)} KB)`);
       };
 
       folders.forEach((folder) => {
         const folderPath = path.join(baseDir, folder);
         if (!fs.existsSync(folderPath)) {
           fs.mkdirSync(folderPath, { recursive: true });
+          toolbox.print.info(`CREATE ${folderPath}`);
         }
 
         const templateFilePath = path.join(templateDir, `${folder}.tlpp`);
         const destFilePath = path.join(folderPath, templateFiles[folder]);
-
-        toolbox.print.info(`Template source: ${templateFilePath}`);
-        toolbox.print.info(`Destination path: ${destFilePath}`);
 
         copyTemplateFile(templateFilePath, destFilePath, folder);
       });
@@ -91,7 +89,6 @@ module.exports = (toolbox: GluegunToolbox) => {
     }
   };
 
-  // Função auxiliar para encontrar o diretório raiz do projeto
   const findProjectRoot = (fileName: string) => {
     let currentDir = process.cwd();
     while (!fs.existsSync(path.join(currentDir, fileName))) {

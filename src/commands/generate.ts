@@ -1,7 +1,7 @@
 import { GluegunToolbox } from "gluegun";
 const { prompt } = require('enquirer');
 
-module.exports = {
+export default {
   name: 'generate',
   alias: ['g'],
   run: async (toolbox: GluegunToolbox) => {
@@ -20,8 +20,8 @@ module.exports = {
 
     // Menu principal: escolha entre Context ou Component
     const mainMenuOptions = [
-      'Context: Será gerado um contexto dentro do seu projeto na pasta context',
-      'Component: Será gerado um componente específico dentro da pasta context'
+      'Context   [ Será gerado um contexto dentro do seu projeto na pasta context.]',
+      'Component [ Será gerado um componente específico dentro da pasta context.  ]'
     ];
 
     const mainMenuChoice = await showMenu('Selecione o que deseja gerar:', mainMenuOptions);
@@ -31,7 +31,7 @@ module.exports = {
       const contextName = await prompt({
         type: 'input',
         name: 'contextName',
-        message: 'Informe o nome do contexto (ex: Ordem de Serviço, Projetos, etc):'
+        message: 'Informe o nome do contexto (ex: Faturamento, Financeiro, etc):'
       });
 
       if (!contextName.contextName) {

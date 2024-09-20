@@ -1,6 +1,6 @@
 import { GluegunToolbox } from "gluegun"
 
-module.exports = {
+export default {
   name: 'new',
   run: async (toolbox: GluegunToolbox) => {
     const { parameters, print, newProject } = toolbox

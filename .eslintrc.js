@@ -1,7 +1,7 @@
 /**
  * @type {import("eslint").Linter.Config}
  */
-module.exports = {
+export default {
   parser: '@typescript-eslint/parser',
 
   parserOptions: {
@@ -10,7 +10,6 @@ module.exports = {
   },
   extends: [
     'plugin:@typescript-eslint/recommended',
-
     'prettier',
     'plugin:prettier/recommended',
   ],

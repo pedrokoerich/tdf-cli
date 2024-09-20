@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as iconv from 'iconv-lite'; // Para codificação Windows-1252
 
-module.exports = (toolbox: GluegunToolbox) => {
+export default (toolbox: GluegunToolbox) => {
   toolbox.generateComponent = async (componentType: string, componentName: string) => {
     try {
       const validTypes = ['service', 'controller', 'data', 'utils', 'mvc', 's', 'c', 'd', 'u', 'm'];
@@ -59,9 +59,7 @@ module.exports = (toolbox: GluegunToolbox) => {
           .replace(/namespaceEndpoint/g, namespaceEndpoint)
           .replace(/nomedocomponente/g, lowerComponent)
           .replace(/Nomedocomponente/g, capitalizedComponent)
-          .replace(/Descrição do componente informada no momento da geração/g, description)
-          .replace(/Ã©/g, 'é')
-          .replace(/Ã§/g, 'ç');
+          .replace(/Descrição do componente informada no momento da geração/g, description);
       };
 
       const copyTemplateFile = (src: string, dest: string) => {
@@ -74,6 +72,10 @@ module.exports = (toolbox: GluegunToolbox) => {
         content = replaceDynamicContent(content);
         const encodedContent = iconv.encode(content, 'windows-1252');
         fs.writeFileSync(dest, encodedContent);
+
+        // Obter o tamanho do arquivo
+        const fileSize = fs.statSync(dest).size;
+        toolbox.print.info(`CREATE ${dest} (${(fileSize / 1024).toFixed(2)} KB)`);
       };
 
       if (!fs.existsSync(baseDir)) {
@@ -87,7 +89,6 @@ module.exports = (toolbox: GluegunToolbox) => {
     }
   };
 
-  // Função auxiliar para encontrar o diretório raiz do projeto
   const findProjectRoot = (fileName: string) => {
     let currentDir = process.cwd();
     while (!fs.existsSync(path.join(currentDir, fileName))) {

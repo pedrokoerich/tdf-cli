@@ -2,6 +2,7 @@
   "name": "tdf-cli",
   "version": "1.0.0",
   "description": "TOTVS Developer Framework CLI",
+  "type": "module",
   "types": "build/types/types.d.ts",
   "bin": {
     "tdf": "bin/tdf-cli"
@@ -16,8 +17,7 @@
     "test": "jest",
     "watch": "jest --watch",
     "snapupdate": "jest --updateSnapshot",
-    "coverage": "jest --coverage",
-    "postinstall": "node ./src/commands/tdf-cli.ts"
+    "coverage": "jest --coverage"
   },
   "files": [
     "build",
@@ -28,6 +28,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "chalk": "^4.1.2",
     "enquirer": "^2.4.1",
     "gluegun": "^4.7.1",
     "iconv-lite": "^0.6.3"

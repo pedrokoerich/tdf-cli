@@ -1,21 +1,26 @@
 #!/usr/bin/env node
 
+import { existsSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-/* tslint:disable */
-// check if we're running in dev mode
-var devMode = require('fs').existsSync(`${__dirname}/../src`)
-// or want to "force" running the compiled version with --compiled-build
-var wantsCompiled = process.argv.indexOf('--compiled-build') >= 0
+// Converter o import.meta.url para __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Verificar se estamos no modo de desenvolvimento
+const devMode = existsSync(new URL('../src', import.meta.url).pathname);
+
+// Verificar se o usuário quer forçar a versão compilada com --compiled-build
+const wantsCompiled = process.argv.indexOf('--compiled-build') >= 0;
 
 if (wantsCompiled || !devMode) {
-  // this runs from the compiled javascript source
-  require(`${__dirname}/../build/cli`).run(process.argv)
+  // Executar a versão compilada (JavaScript)
+  import('../build/src/cli.js').then(cli => cli.run(process.argv));
 } else {
-  // this runs from the typescript source (for dev only)
-  // hook into ts-node so we can run typescript on the fly
-  require('ts-node').register({ project: `${__dirname}/../tsconfig.json` })
-  // run the CLI with the current process arguments
-  require(`${__dirname}/../src/cli`).run(process.argv)
+  // Executar a versão TypeScript (somente para dev)
+  import('ts-node').then(tsNode => {
+    tsNode.register({ project: new URL('../tsconfig.json', import.meta.url).pathname });
+    import('../src/cli.ts').then(cli => cli.run(process.argv));
+  });
 }
-
-

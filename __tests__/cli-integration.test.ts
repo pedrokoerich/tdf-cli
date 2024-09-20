@@ -1,4 +1,10 @@
 import { system, filesystem } from 'gluegun'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
+
+// Substituição de __dirname no formato ES module
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 const src = filesystem.path(__dirname, '..')
 
@@ -21,7 +27,8 @@ test('generates file', async () => {
   expect(output).toContain('Generated file at models/foo-model.ts')
   const foomodel = filesystem.read('models/foo-model.ts')
 
-  expect(foomodel).toContain(`module.exports = {`)
+  // Se o arquivo gerado também for ES module, ajuste a expectativa:
+  expect(foomodel).toContain(`export default {`)
   expect(foomodel).toContain(`name: 'foo'`)
 
   // cleanup artifact
