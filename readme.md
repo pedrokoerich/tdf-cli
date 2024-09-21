@@ -5,6 +5,9 @@
 
 ## Instalação
 
+### Pré-requisitos
+Instale o [Node.js](https://nodejs.org) que inclui o [Node Package Manager](https://docs.npmjs.com/getting-started)
+
 Para instalar o `tdf-cli`, execute o seguinte comando:
 
 ```bash
