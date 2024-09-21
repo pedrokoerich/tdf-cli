@@ -68,13 +68,13 @@ Exemplo de estrutura:
 ```
 - OrdemServico
    |- Controller
-      |- namescpace.OrdemServico.controller.tlpp
+      |- namespace.OrdemServico.controller.tlpp
    |- Service
-      |- namescpace.OrdemServico.service.tlpp
+      |- namespace.OrdemServico.service.tlpp
    |- Data
-      |- namescpace.OrdemServico.data.tlpp
+      |- namespace.OrdemServico.data.tlpp
    |- Utils
-      |- namescpace.OrdemServico.utils.tlpp
+      |- namespace.OrdemServico.utils.tlpp
    |- Mvc
       |- OrdemServico.mvc.tlpp
 ```
