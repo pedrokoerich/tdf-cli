@@ -48,19 +48,19 @@ export default {
       const componentMenuChoice = await showMenu('Selecione o componente que deseja gerar:', componentMenuOptions);
       const componentType = componentMenuChoice.toLowerCase();
 
-      const contextName = await prompt({
+      const componentName = await prompt({
         type: 'input',
-        name: 'contextName',
-        message: 'Informe o nome do contexto onde o componente será gerado:'
+        name: 'componentName',
+        message: 'Informe o nome do componente:'
       });
 
-      if (!contextName.contextName) {
-        console.log('Nome do contexto inválido.');
+      if (!componentName.componentName) {
+        console.log('Nome do componente inválido.');
         process.exit();
       }
 
       // Gerar o componente
-      await generateComponent(componentType, contextName.contextName);
+      await generateComponent(componentType, componentName.componentName);
     }
 
     process.exit();

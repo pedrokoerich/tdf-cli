@@ -46,10 +46,7 @@ module.exports = (toolbox: GluegunToolbox) => {
       // Caminho da pasta de templates
       const templateDir = findProjectRoot('bin');
       const templateFilePath = path.join(templateDir, 'src', 'templates', 'context', `${componentType}.tlpp`);
-      const destFilePath = path.join(baseDir, templateFile);
-
-      console.info(`Template source: ${templateFilePath}`);
-      console.info(`Destination path: ${destFilePath}`);
+      const destFilePath = path.join(baseDir, 'src','context',templateFile);
 
       const replaceDynamicContent = (content: string) => {
         const capitalizedComponent = componentName.charAt(0).toUpperCase() + componentName.slice(1);

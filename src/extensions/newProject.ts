@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const iconv = require('iconv-lite');
 const chalk = require('chalk');
+const AdmZip = require('adm-zip');
 
 
 module.exports = (toolbox: GluegunToolbox) => {
@@ -106,6 +107,19 @@ module.exports = (toolbox: GluegunToolbox) => {
     const sigapciTemplatePath = path.join(templateDir, 'src', 'sigapci.tlpp')
     const sigapciDestPath = path.join(srcDir, 'sigapci.tlpp')
     copyTemplateFile(sigapciTemplatePath, sigapciDestPath, replacements, 'windows-1252');
+
+    function extractZip(zipPath: string, extractTo: string) {
+      const zip = new AdmZip(zipPath);
+      zip.extractAllTo(extractTo, true); // extrai para a pasta especificada
+
+      const stats = fs.statSync(extractTo);
+      console.log(chalk.green(`CREATE `) + `${extractTo} (${(stats.size / 1024).toFixed(2)} KB)`);
+    }
+
+    // Extrair o arquivo de templates.zip
+    const destinoZipPath = path.join(baseDir, 'packages', 'includes')
+    const templatesZipPath = path.join(templateDir, 'packages','includes.zip');
+    extractZip(templatesZipPath, destinoZipPath);
 
     // Mensagem final de sucesso com o check verde
     console.log(chalk.green.bold(`✔' Projeto ${projectName} gerado com sucesso na pasta ${baseDir}`));
