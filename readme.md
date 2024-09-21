@@ -1,3 +1,4 @@
+
 # TOTVS Developer Framework CLI (tdf-cli)
 
 **TOTVS Developer Framework CLI (tdf-cli)** é uma ferramenta de linha de comando desenvolvida para agilizar a criação e a estruturação de projetos dentro do ecossistema TOTVS, facilitando a geração de contextos e componentes específicos para o desenvolvimento.
@@ -41,6 +42,15 @@ ou
 tdf g
 ```
 
+Ao executar o comando, o seguinte menu interativo será exibido:
+
+```bash
+? O que você deseja gerar? (Use as setas para navegar e Enter para selecionar)
+
+❯ Context
+  Component
+```
+
 #### 2.1. Gerar um novo contexto
 
 Se você selecionar a opção **Context** no menu, o CLI pedirá para fornecer o nome do contexto que deseja criar (por exemplo, **Ordem de Serviço**, **Pedido de Venda**, etc.).
@@ -51,23 +61,39 @@ tdf g
 ```
 Escolha **Context** no menu e forneça o nome, como `OrdemServico`.
 
+Dentro da pasta `OrdemServico` será gerado 5 pastas e com seus arquivos respectivos já pré-preenchidos.
+
+Exemplo de estrutura:
+
+```
+- OrdemServico
+   |- Controller
+      |- namescpace.OrdemServico.controller.tlpp
+   |- Service
+      |- namescpace.OrdemServico.service.tlpp
+   |- Data
+      |- namescpace.OrdemServico.data.tlpp
+   |- Utils
+      |- namescpace.OrdemServico.utils.tlpp
+   |- Mvc
+      |- OrdemServico.mvc.tlpp
+```
+
 #### 2.2. Gerar um novo componente
 
 Se você selecionar **Component** no menu, o CLI permitirá que você selecione, usando as setas do teclado, os componentes que deseja criar para um determinado contexto.
 
-Os componentes disponíveis são:
+O menu de seleção será assim:
 
-- **controller**
-- **service**
-- **data**
-- **utils**
-- **mvc**
-
-**Exemplo de uso:**
 ```bash
-tdf g
+? Selecione os componentes que deseja gerar (use as setas e barra de espaço para marcar):
+
+❯ controller
+  service
+  data
+  utils
+  mvc
 ```
-Escolha **Component** no menu e, em seguida, selecione os componentes desejados como `controller`, `service`, etc.
 
 ## Exemplo Completo
 
@@ -77,19 +103,70 @@ Escolha **Component** no menu e, em seguida, selecione os componentes desejados 
    tdf new crm-system
    ```
 
-2. Gere um novo contexto de **Pedido de Venda**:
+2. Informe o Namespace `custom.tdfcli`:
 
    ```bash
-   tdf g
+   √ Informe o Namespace do seu projeto: custom.tdfcli
    ```
-   Selecione **Context** e insira o nome do contexto: `PedidoVenda`.
 
-3. Gere componentes para o contexto de **Ordem de Serviço**:
+3. Saída do Console:
 
    ```bash
+   CREATE C:\pessoais\tdf-cli\crm-system\src\context
+   CREATE C:\pessoais\tdf-cli\crm-system\src\lib
+   CREATE C:\pessoais\tdf-cli\crm-system\src\schedules
+   CREATE C:\pessoais\tdf-cli\crm-system\src\workflows
+   CREATE C:\pessoais\tdf-cli\crm-system\packages\includes
+   CREATE C:\pessoais\tdf-cli\crm-system\packages\rdmakes
+   CREATE C:\pessoais\tdf-cli\crm-system\readme.md (0.82 KB)
+   CREATE C:\pessoais\tdf-cli\crm-system\.gitignore (0.02 KB)
+   CREATE C:\pessoais\tdf-cli\crm-system\Jenkinsfile (2.49 KB)
+   CREATE C:\pessoais\tdf-cli\crm-system\src\sigapci.tlpp (0.54 KB)
+   CREATE C:\pessoais\tdf-cli\crm-system\packages\includes (0.00 KB)
+
+   ✔ Projeto crm-system gerado com sucesso na pasta C:\pessoais\tdf-cli\crm-system
+   ```
+
+4. Gere um novo contexto de **Pedido de Venda**:
+
+   ```bash
+   cd crm-system
    tdf g
    ```
-   Selecione **Component** e escolha os componentes `controller`, `service` e `mvc`.
+   
+5. Selecione **Context** e insira o nome do contexto: `PedidoVenda`.
+   ```bash
+   ? O que você deseja gerar? (Use as setas para navegar e Enter para selecionar)
+
+   ❯ Context
+     Component
+   ```
+
+6. Selecione **Context** e insira o nome do contexto: `PedidoVenda` e uma descrição.
+   ```bash
+   √ Selecione o que deseja gerar: · Context[ Será gerado um contexto dentro do seu projeto na pasta context.]
+
+   ? Informe o nome do contexto (ex: Faturamento, Financeiro, etc): » PedidoVenda
+
+   ? Informe uma descrição para o contexto: »  API de Pedido de venda.
+   ```
+
+7. Saída do Console:
+
+   ```bash
+      CREATE C:\pessoais\tdf-cli\crm-system\src\context\PedidoVenda\controller
+      CREATE C:\pessoais\tdf-cli\crm-system\src\context\PedidoVenda\controller\custom.tdfcli.PedidoVenda.controller.tlpp (1.47 KB)
+      CREATE C:\pessoais\tdf-cli\crm-system\src\context\PedidoVenda\service
+      CREATE C:\pessoais\tdf-cli\crm-system\src\context\PedidoVenda\service\custom.tdfcli.PedidoVenda.service.tlpp (1.82 KB)
+      CREATE C:\pessoais\tdf-cli\crm-system\src\context\PedidoVenda\data
+      CREATE C:\pessoais\tdf-cli\crm-system\src\context\PedidoVenda\data\custom.tdfcli.PedidoVenda.data.tlpp (2.75 KB)
+      CREATE C:\pessoais\tdf-cli\crm-system\src\context\PedidoVenda\utils
+      CREATE C:\pessoais\tdf-cli\crm-system\src\context\PedidoVenda\utils\custom.tdfcli.PedidoVenda.utils.tlpp (0.23 KB)
+      CREATE C:\pessoais\tdf-cli\crm-system\src\context\PedidoVenda\mvc
+      CREATE C:\pessoais\tdf-cli\crm-system\src\context\PedidoVenda\mvc\PedidoVenda.mvc.tlpp (2.92 KB)
+
+   ✔ Contexto PedidoVenda criado com sucesso!
+   ```
 
 ## Contribuição
 
