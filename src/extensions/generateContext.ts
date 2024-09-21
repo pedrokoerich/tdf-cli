@@ -1,14 +1,15 @@
 import { GluegunToolbox } from 'gluegun';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as iconv from 'iconv-lite'; // Para codificação Windows-1252
+const fs = require('fs');
+const path = require('path');
+const iconv = require('iconv-lite');
+const chalk = require('chalk');
 
-export default (toolbox: GluegunToolbox) => {
+module.exports = (toolbox: GluegunToolbox) => {
   toolbox.generateContext = async (componentName: string) => {
     try {
       const projectRoot = findProjectRoot('project-info.json');
       if (!projectRoot) {
-        toolbox.print.error('Arquivo project-info.json não encontrado.');
+        console.error(chalk.red('Arquivo project-info.json não encontrado.'));
         return;
       }
 
@@ -25,7 +26,7 @@ export default (toolbox: GluegunToolbox) => {
       });
 
       if (!description) {
-        toolbox.print.error('Descrição do componente não fornecida.');
+        console.error(chalk.red('Descrição do componente não fornecida.'));
         return;
       }
 
@@ -56,7 +57,7 @@ export default (toolbox: GluegunToolbox) => {
 
       const copyTemplateFile = (src: string, dest: string, folderType: string) => {
         if (!fs.existsSync(src)) {
-          toolbox.print.error(`Template ${src} não encontrado.`);
+          console.error(chalk.red(`Template ${src} não encontrado.`));
           return;
         }
 
@@ -67,14 +68,14 @@ export default (toolbox: GluegunToolbox) => {
 
         // Obter o tamanho do arquivo
         const fileSize = fs.statSync(dest).size;
-        toolbox.print.info(`CREATE ${dest} (${(fileSize / 1024).toFixed(2)} KB)`);
+        console.log(chalk.green(`CREATE `) + `${dest} (${(fileSize / 1024).toFixed(2)} KB)`);
       };
 
       folders.forEach((folder) => {
         const folderPath = path.join(baseDir, folder);
         if (!fs.existsSync(folderPath)) {
           fs.mkdirSync(folderPath, { recursive: true });
-          toolbox.print.info(`CREATE ${folderPath}`);
+          console.log(chalk.green(`CREATE `) + folderPath);
         }
 
         const templateFilePath = path.join(templateDir, `${folder}.tlpp`);
@@ -83,9 +84,9 @@ export default (toolbox: GluegunToolbox) => {
         copyTemplateFile(templateFilePath, destFilePath, folder);
       });
 
-      toolbox.print.success(`Contexto ${componentName} criado com sucesso!`);
+      console.log(chalk.green.bold(`✔ Contexto ${componentName} criado com sucesso!`));
     } catch (error) {
-      toolbox.print.error(`Erro ao criar o contexto: ${error.message}`);
+      console.error(chalk.red(`Erro ao criar o contexto: ${error.message}`));
     }
   };
 

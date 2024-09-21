@@ -5,7 +5,7 @@ export default {
   name: 'generate',
   alias: ['g'],
   run: async (toolbox: GluegunToolbox) => {
-    const { print, generateContext, generateComponent } = toolbox;
+    const { generateContext, generateComponent } = toolbox;
 
     // Função para mostrar as opções e capturar a escolha do usuário com Enquirer
     const showMenu = async (message: string, choices: string[]): Promise<string> => {
@@ -41,7 +41,6 @@ export default {
 
       // Gerar o contexto
       await generateContext(contextName.contextName);
-      print.success(`Contexto ${contextName.contextName} gerado com sucesso!`);
     } else if (mainMenuChoice.startsWith('Component')) {
       // Opção Component selecionada
       const componentMenuOptions = ['Controller', 'Service', 'Data', 'Utils', 'MVC'];
@@ -62,7 +61,6 @@ export default {
 
       // Gerar o componente
       await generateComponent(componentType, contextName.contextName);
-      print.success(`Componente ${componentType} gerado com sucesso no contexto ${contextName.contextName}!`);
     }
 
     process.exit();

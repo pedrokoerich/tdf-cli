@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": false,
     "experimentalDecorators": true,
     "lib": [
       "es2015",
@@ -10,13 +10,15 @@
       "es2015.iterable",
       "dom"
     ],
-    "module": "ESNext",
+    "module": "CommonJS",
     "target": "ESNext",
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "noImplicitAny": false,
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "sourceMap": true,
+    "inlineSourceMap": true,
     "outDir": "build",
     "strict": false,
     "declaration": true,

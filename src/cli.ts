@@ -22,4 +22,4 @@ async function run(argv) {
   return toolbox
 }
 
-export default {run} 
+module.exports = { run }

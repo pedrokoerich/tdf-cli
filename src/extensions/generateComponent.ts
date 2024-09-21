@@ -1,14 +1,15 @@
 import { GluegunToolbox } from 'gluegun';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as iconv from 'iconv-lite'; // Para codificação Windows-1252
+const fs = require('fs');
+const path = require('path');
+const iconv = require('iconv-lite');
+const chalk = require('chalk');
 
-export default (toolbox: GluegunToolbox) => {
+module.exports = (toolbox: GluegunToolbox) => {
   toolbox.generateComponent = async (componentType: string, componentName: string) => {
     try {
       const validTypes = ['service', 'controller', 'data', 'utils', 'mvc', 's', 'c', 'd', 'u', 'm'];
       if (!validTypes.includes(componentType)) {
-        toolbox.print.error(`Tipo de componente inválido. Tipos válidos: ${validTypes.join(', ')}`);
+        console.error(chalk.red(`Tipo de componente inválido. Tipos válidos: ${validTypes.join(', ')}`));
         return;
       }
 
@@ -18,7 +19,7 @@ export default (toolbox: GluegunToolbox) => {
 
       const projectRoot = findProjectRoot('project-info.json');
       if (!projectRoot) {
-        toolbox.print.error('Arquivo project-info.json não encontrado.');
+        console.error(chalk.red('Arquivo project-info.json não encontrado.'));
         return;
       }
 
@@ -35,7 +36,7 @@ export default (toolbox: GluegunToolbox) => {
       });
 
       if (!description) {
-        toolbox.print.error('Descrição do componente não fornecida.');
+        console.error(chalk.red('Descrição do componente não fornecida.'));
         return;
       }
 
@@ -47,8 +48,8 @@ export default (toolbox: GluegunToolbox) => {
       const templateFilePath = path.join(templateDir, 'src', 'templates', 'context', `${componentType}.tlpp`);
       const destFilePath = path.join(baseDir, templateFile);
 
-      toolbox.print.info(`Template source: ${templateFilePath}`);
-      toolbox.print.info(`Destination path: ${destFilePath}`);
+      console.info(`Template source: ${templateFilePath}`);
+      console.info(`Destination path: ${destFilePath}`);
 
       const replaceDynamicContent = (content: string) => {
         const capitalizedComponent = componentName.charAt(0).toUpperCase() + componentName.slice(1);
@@ -64,7 +65,7 @@ export default (toolbox: GluegunToolbox) => {
 
       const copyTemplateFile = (src: string, dest: string) => {
         if (!fs.existsSync(src)) {
-          toolbox.print.error(`Template ${src} não encontrado.`);
+          console.error(chalk.red(`Template ${src} não encontrado.`));
           return;
         }
 
@@ -75,7 +76,7 @@ export default (toolbox: GluegunToolbox) => {
 
         // Obter o tamanho do arquivo
         const fileSize = fs.statSync(dest).size;
-        toolbox.print.info(`CREATE ${dest} (${(fileSize / 1024).toFixed(2)} KB)`);
+        console.log(chalk.green(`CREATE `) + `${dest} (${(fileSize / 1024).toFixed(2)} KB)`);
       };
 
       if (!fs.existsSync(baseDir)) {
@@ -83,9 +84,9 @@ export default (toolbox: GluegunToolbox) => {
       }
 
       copyTemplateFile(templateFilePath, destFilePath);
-      toolbox.print.success(`Componente ${componentName} (${componentType}) criado com sucesso!`);
+      console.log(chalk.green.bold(`✔ Componente ${componentName} (${componentType}) criado com sucesso!`));
     } catch (error) {
-      toolbox.print.error(`Erro ao criar o componente: ${error.message}`);
+      console.error(chalk.red(`Erro ao criar o componente: ${error.message}`));
     }
   };
 

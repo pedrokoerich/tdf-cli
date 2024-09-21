@@ -1,10 +1,11 @@
 import { GluegunToolbox } from 'gluegun'
-import * as fs from 'fs'
-import * as path from 'path'
-import * as iconv from 'iconv-lite'
-import chalk from 'chalk'
+const fs = require('fs');
+const path = require('path');
+const iconv = require('iconv-lite');
+const chalk = require('chalk');
 
-export default (toolbox: GluegunToolbox) => {
+
+module.exports = (toolbox: GluegunToolbox) => {
   toolbox.newProject = async (projectName: string) => {
     const baseDir = path.join(process.cwd(), projectName)
     const srcDir = path.join(baseDir, 'src')
@@ -58,7 +59,7 @@ export default (toolbox: GluegunToolbox) => {
 
       // Exibe o caminho e tamanho do arquivo criado com "CREATE" e cor verde
       const stats = fs.statSync(destFilePath);
-      console.log(chalk.green(`CREATE ${destFilePath} (${stats.size} bytes)`));
+      console.log(chalk.green(`CREATE `) + `${destFilePath} (${(stats.size / 1024).toFixed(2)} KB)`);
     };
 
     // Substituições dinâmicas para os templates
@@ -83,7 +84,7 @@ export default (toolbox: GluegunToolbox) => {
       if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(dirPath, { recursive: true })
       }
-      console.log(chalk.green(`CREATE ${dirPath}`)); // Usando "CREATE" e cor verde
+      console.log(chalk.green(`CREATE `)+ dirPath); // Usando "CREATE" e cor verde
     })
 
     // Copiar e substituir conteúdo do readme.md
@@ -107,6 +108,6 @@ export default (toolbox: GluegunToolbox) => {
     copyTemplateFile(sigapciTemplatePath, sigapciDestPath, replacements, 'windows-1252');
 
     // Mensagem final de sucesso com o check verde
-    console.log(chalk.green.bold(`✔ Projeto ${projectName} gerado com sucesso na pasta ${baseDir}`));
+    console.log(chalk.green.bold(`✔' Projeto ${projectName} gerado com sucesso na pasta ${baseDir}`));
   }
 }
