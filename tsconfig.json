@@ -18,7 +18,6 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "sourceMap": true,
-    "inlineSourceMap": true,
     "outDir": "build",
     "strict": false,
     "declaration": true,
