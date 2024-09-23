@@ -45,7 +45,7 @@ module.exports = (toolbox: GluegunToolbox) => {
 
       // Caminho da pasta de templates
       const templateDir = findProjectRoot('bin');
-      const templateFilePath = path.join(templateDir, 'src', 'templates', 'context', `${componentType}.tlpp`);
+      const templateFilePath = path.join(templateDir, 'src', 'templates', `${componentType}.tlpp`);
       const destFilePath = path.join(baseDir, 'src','context',templateFile);
 
       const replaceDynamicContent = (content: string) => {

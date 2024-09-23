@@ -34,7 +34,7 @@ module.exports = (toolbox: GluegunToolbox) => {
       const folders = ['controller', 'service', 'data', 'utils', 'mvc'];
 
       const projectRootTemplate = findProjectRoot('bin');
-      const templateDir = path.join(projectRootTemplate, 'src', 'templates', 'context');
+      const templateDir = path.join(projectRootTemplate, 'src', 'templates');
       const templateFiles = {
         controller: `${namespace}.${componentName}.controller.tlpp`,
         service: `${namespace}.${componentName}.service.tlpp`,

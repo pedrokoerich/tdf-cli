@@ -94,7 +94,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     copyTemplateFile(readmeTemplatePath, readmeDestPath, replacements, 'utf-8');
 
     // Copiar e substituir conteúdo do .gitignore
-    const gitignoreTemplatePath = path.join(templateDir, '.gitignore')
+    const gitignoreTemplatePath = path.join(templateDir, '.gitignore.template')
     const gitognoreDestPath = path.join(baseDir, '.gitignore')
     copyTemplateFile(gitignoreTemplatePath, gitognoreDestPath, replacements, 'utf-8');
 
@@ -104,7 +104,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     copyTemplateFile(jenkinsTemplatePath, jenkinsDestPath, replacements, 'utf-8');
 
     // Copiar e substituir conteúdo do sigapci.tlpp
-    const sigapciTemplatePath = path.join(templateDir, 'src', 'sigapci.tlpp')
+    const sigapciTemplatePath = path.join(templateDir, 'sigapci.tlpp')
     const sigapciDestPath = path.join(srcDir, 'sigapci.tlpp')
     copyTemplateFile(sigapciTemplatePath, sigapciDestPath, replacements, 'windows-1252');
 
@@ -118,7 +118,7 @@ module.exports = (toolbox: GluegunToolbox) => {
 
     // Extrair o arquivo de templates.zip
     const destinoZipPath = path.join(baseDir, 'packages', 'includes')
-    const templatesZipPath = path.join(templateDir, 'packages','includes.zip');
+    const templatesZipPath = path.join(templateDir,'includes.zip');
     extractZip(templatesZipPath, destinoZipPath);
 
     // Mensagem final de sucesso com o check verde
