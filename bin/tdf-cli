@@ -7,9 +7,6 @@ var devMode = require('fs').existsSync(`${__dirname}/../src`)
 // or want to "force" running the compiled version with --compiled-build
 var wantsCompiled = process.argv.indexOf('--compiled-build') >= 0
 
-console.log('devMode:', devMode)
-console.log('wantsCompiled:', wantsCompiled)
-
 if (wantsCompiled || !devMode) {
   // this runs from the compiled javascript source
   require(`${__dirname}/../build/cli`).run(process.argv)

@@ -1,6 +1,6 @@
 {
   "name": "tdf-cli",
-  "version": "1.0.13",
+  "version": "1.0.0",
   "description": "TOTVS Developer Framework CLI",
   "type": "commonjs",
   "types": "build/types/types.d.ts",
