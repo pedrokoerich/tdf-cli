@@ -5,12 +5,12 @@ Namespace namespace.nomedocomponente
 Using Namespace namespace.nomedocomponente.utils
 
 Class NomedocomponenteData From FWAdapterBaseV2
-    Public Data oHashFields as Object
-    Public Method new()     as Object
-    Public Method getNomedocomponente() as Logical
-    Public Method deleteNomedocomponente() as Logical
-    Public Method putNomedocomponente() as Logical
-    Public Method postNomedocomponente() as Logical
+   Public Data oHashFields as Object
+   Public Method new()     as Object
+   Public Method getNomedocomponente()
+   Public Method deleteNomedocomponente() as Logical
+   Public Method putNomedocomponente() as Logical
+   Public Method postNomedocomponente() as Logical
 EndClass
 
 Method new(cVerb as Character) as Object Class NomedocomponenteData
@@ -21,15 +21,18 @@ Method getNomedocomponente(cWhere) CLASS NomedocomponenteData
    Local aArea      := FwGetArea() AS array
 
    AddMapFieldsNomedocomponente(self)
+   ::SetPage(1)
+   ::SetPageSize(10)
    ::SetQuery(GetQueryNomedocomponente())
-   
    ::SetWhere( cWhere )
+   ::SetOrder("A1_NOME")
+
    If ::Execute()
       ::FillGetResponse()
    EndIf
 
    FwrestArea(aArea)
-Return .T.
+Return
 
 Static Function GetQueryNomedocomponente()
    Local cQuery AS CHARACTER
@@ -40,60 +43,56 @@ Static Function GetQueryNomedocomponente()
 Return cQuery
 
 
-Method deleteNomedocomponente() as Logical Class NomedocomponenteData
+Method deleteNomedocomponente(cId as Character) as Logical Class NomedocomponenteData
    Local oModel      := nil   as Object
    Local lRet        := .T.   as Logical
 
-    oModel := FWLoadModel("nomedoComponente")
-    oModel:SetOperation(5)
-    oModel:Activate()
+   oModel := FWLoadModel("nomedocomponente")
+   oModel:SetOperation(5)
+   oModel:Activate()
 
-    If !lRet .Or. !( oModel:VldData() .And. oModel:CommitData() )
-        lRet := .F.
-        SetRestFault(400, namespace.lib.Utils():GetMVCParsingMessage(oModel))
-    Endif
+   If !lRet .Or. !( oModel:VldData() .And. oModel:CommitData() )
+      lRet := .F.
+      SetRestFault(400, namespace.lib.LibUtils():GetMVCParsingMessage(oModel))
+   Endif
 
-    oModel:DeActivate()
-    FreeObj(oModelZBA)
-    FreeObj(oModel)
+   oModel:DeActivate()
+   FreeObj(oModel)
 Return lRet
 
 Method postNomedocomponente(jBody as Json) as Logical Class NomedocomponenteData
    Local oModel      := nil   as Object
    Local lRet        := .T.   as Logical
 
-    oModel := FWLoadModel("nomedoComponente")
-    oModel:SetOperation(3)
-    oModel:Activate()
+   oModel := FWLoadModel("nomedocomponente")
+   oModel:SetOperation(3)
+   oModel:Activate()
 
-    If !lRet .Or. !( oModel:VldData() .And. oModel:CommitData() )
-        lRet := .F.
-        SetRestFault(400, namespace.lib.Utils():GetMVCParsingMessage(oModel))
-    Endif
+   If !lRet .Or. !( oModel:VldData() .And. oModel:CommitData() )
+      lRet := .F.
+      SetRestFault(400, namespace.lib.LibUtils():GetMVCParsingMessage(oModel))
+   Endif
 
-    oModel:DeActivate()
-    FreeObj(oModelZBA)
-    FreeObj(oModel)
+   oModel:DeActivate()
+   FreeObj(oModel)
 Return lRet 
 
 Method putNomedocomponente(jBody as Json) as Logical Class NomedocomponenteData
    Local oModel      := nil   as Object
    Local lRet        := .T.   as Logical
 
-    oModel := FWLoadModel("nomedoComponente")
-    oModel:SetOperation(4)
-    oModel:Activate()
+   oModel := FWLoadModel("nomedocomponente")
+   oModel:SetOperation(4)
+   oModel:Activate()
 
-    If !lRet .Or. !( oModel:VldData() .And. oModel:CommitData() )
-        lRet := .F.
-        SetRestFault(400, namespace.lib.Utils():GetMVCParsingMessage(oModel))
-    Endif
+   If !lRet .Or. !( oModel:VldData() .And. oModel:CommitData() )
+      lRet := .F.
+      SetRestFault(400, namespace.lib.LibUtils():GetMVCParsingMessage(oModel))
+   Endif
 
-    oModel:DeActivate()
-    FreeObj(oModelZBA)
-    FreeObj(oModel)
+   oModel:DeActivate()
+   FreeObj(oModel)
 Return lRet 
-
 
 Static Function AddMapFieldsNomedocomponente(oSelf as Object)
    oSelf:AddMapFields("nome","A1_NOME",    .T., .T., {'A1_NOME',    'C', TamSX3( 'A1_NOME' )[1],    0})

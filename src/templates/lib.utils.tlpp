@@ -1,0 +1,39 @@
+#include 'tlpp-core.th'
+#include 'tlpp-rest.th'
+#include "tlpp-object.th"
+
+Namespace namespace.lib
+Class LibUtils
+	Public Method New() as object
+	Static Method GetMVCParsingMessage(oModelMVC AS object) as character
+endclass
+
+Method New() Class LibUtils
+Return Self
+
+Method GetMVCParsingMessage(oModelMVC) as character Class LibUtils
+	Local cMessage as character
+	Local aError := oModelMVC:GetErrorMessage()
+
+	If !Empty(aError[4])
+		If !Empty(cMessage)
+			cMessage += ' - '
+		EndIf
+		cMessage += cValToChar(aError[4])
+	ENdIf
+	IF !Empty(aError[5])
+		If !Empty(cMessage)
+			cMessage += ' - '
+		EndIf
+		cMessage += cValToChar(aError[5])
+	EndIf
+	IF !Empty(aError[6])
+		If !Empty(cMessage)
+			cMessage += ' - '
+		EndIf
+		cMessage += cValToChar(aError[6])
+	ENdif
+	If Empty(cMessage)
+		aEval(aError, {|x| cMessage += IIF(Empty(x),"",x+' - ')})
+	Endif
+Return cMessage

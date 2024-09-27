@@ -6,17 +6,17 @@
 #Include "apwebex.ch"
 
 /*---------------------------------------------------------------------*
-| Func:  NomedoComponente                                              |
+| Func:  nomedocomponente                                              |
 | Autor: @Autor                                                        |
-| Data:  currenteDate                                                  |
-| Desc:  description                                                   |
+| Data:  currentDate                                                   |
+| Desc:  description_context                                           |
 *---------------------------------------------------------------------*/
 
 User Function Nomedocomponente()
    Local oBrowse := FwLoadBrw("nomedocomponente")
    oBrowse := FWMBrowse():New()
    oBrowse:SetAlias('TRB') //Alias da tabela
-   oBrowse:SetDescription('description') //Descrição do componente
+   oBrowse:SetDescription('description_context') //Descrição do componente
    oBrowse:Activate()
 Return
 
@@ -25,23 +25,23 @@ Static Function BROWSEDEF()
 
    oBrowse:SetAlias("TRB")
    oBrowse:SetDescription("description")
-   oBrowse:SetMenuDef('Nomedocomponente')
+   oBrowse:SetMenuDef('description_context')
 Return oBrowse
 
 Static Function MENUDEF()
    Private aRotina := {}
 
-   ADD OPTION aRotina TITLE 'Incluir'    ACTION 'VIEWDEF.Nomedocomponente' OPERATION MODEL_OPERATION_INSERT ACCESS 0
-   ADD OPTION aRotina TITLE 'Alterar'    ACTION 'VIEWDEF.Nomedocomponente' OPERATION MODEL_OPERATION_UPDATE ACCESS 0
-   ADD OPTION aRotina TITLE 'Excluir'    ACTION 'VIEWDEF.Nomedocomponente' OPERATION MODEL_OPERATION_DELETE ACCESS 0
-   ADD OPTION aRotina TITLE 'Visualizar' ACTION 'VIEWDEF.Nomedocomponente' OPERATION MODEL_OPERATION_VIEW   ACCESS 0
+   ADD OPTION aRotina TITLE 'Incluir'    ACTION 'VIEWDEF.nomedocomponente' OPERATION MODEL_OPERATION_INSERT ACCESS 0
+   ADD OPTION aRotina TITLE 'Alterar'    ACTION 'VIEWDEF.nomedocomponente' OPERATION MODEL_OPERATION_UPDATE ACCESS 0
+   ADD OPTION aRotina TITLE 'Excluir'    ACTION 'VIEWDEF.nomedocomponente' OPERATION MODEL_OPERATION_DELETE ACCESS 0
+   ADD OPTION aRotina TITLE 'Visualizar' ACTION 'VIEWDEF.nomedocomponente' OPERATION MODEL_OPERATION_VIEW   ACCESS 0
 Return aRotina
 
 Static Function MODELDEF()
    Local oModel
    Local oStrTRB := FwFormStruct(1,"TRB")
 
-   oModel := MPFormModel():New("NomedocomponenteM",/*bPreValidacao*/,{|oModel| ValTdOK(oModel)} /*bPosValidacao*/, {|oModel| SaveModel(oModel)} /*bCommit*/, /*bCancel*/ )
+   oModel := MPFormModel():New("nomedocomponenteM",/*bPreValidacao*/,{|oModel| ValTdOK(oModel)} /*bPosValidacao*/, {|oModel| SaveModel(oModel)} /*bCommit*/, /*bCancel*/ )
 
    oModel:AddFields("TRBMASTER", NIL,oStrTRB)
    oModel:GetModel("TRBMASTER"):SetDescription("description")
@@ -53,7 +53,7 @@ Return oModel
 Static Function VIEWDEF()
    Local oView := FwFormView():New()
    Local oStrTRB := FWFormStruct(2,"TRB")
-   Local oModel := FwLoadModel("Nomedocomponente")
+   Local oModel := FwLoadModel("nomedocomponente")
 
    oView:SetModel(oModel)
    oView:AddField("VIEW_TRB", oStrTRB, "TRBMASTER")

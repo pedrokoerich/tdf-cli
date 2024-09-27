@@ -47,7 +47,7 @@ module.exports = (toolbox: GluegunToolbox) => {
 
       // Substituições dinâmicas no conteúdo
       Object.keys(replacements).forEach(key => {
-        content = content.replace(new RegExp(`{{${key}}}`, 'g'), replacements[key]);
+        content = content.replace(new RegExp(`${key}`, 'g'), replacements[key]);
       });
 
       // Se for Windows-1252, codifica e salva o arquivo com essa codificação
@@ -76,6 +76,8 @@ module.exports = (toolbox: GluegunToolbox) => {
       'src/lib',
       'src/schedules',
       'src/workflows',
+      'src/entry points',
+      'src/querys',
       'packages/includes',
       'packages/rdmakes'
     ]
@@ -107,6 +109,11 @@ module.exports = (toolbox: GluegunToolbox) => {
     const sigapciTemplatePath = path.join(templateDir, 'sigapci.tlpp')
     const sigapciDestPath = path.join(srcDir, 'sigapci.tlpp')
     copyTemplateFile(sigapciTemplatePath, sigapciDestPath, replacements, 'windows-1252');
+
+    // Copiar e substituir conteúdo do sigapci.tlpp
+    const libUtilsTemplatePath = path.join(templateDir, 'lib.utils.tlpp')
+    const libUtilsDestPath = path.join(srcDir, 'lib', `${namespace.namespace}.lib.utils.tlpp`)
+    copyTemplateFile(libUtilsTemplatePath, libUtilsDestPath, replacements, 'windows-1252');
 
     function extractZip(zipPath: string, extractTo: string) {
       const zip = new AdmZip(zipPath);

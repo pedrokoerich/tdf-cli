@@ -9,7 +9,7 @@ module.exports = (toolbox: GluegunToolbox) => {
     try {
       const projectRoot = findProjectRoot('project-info.json');
       if (!projectRoot) {
-        console.error(chalk.red('Arquivo project-info.json não encontrado.'));
+        console.error(chalk.red('Nenhum projeto localizado para geração do contexto.'));
         return;
       }
 
@@ -48,11 +48,12 @@ module.exports = (toolbox: GluegunToolbox) => {
         const lowerComponent = componentName.toLowerCase();
 
         return content
-          .replace(/{{namespace}}/g, namespace)
+          .replace(/namespace/g, namespace)
           .replace(/namespaceEndpoint/g, namespaceEndpoint)
           .replace(/nomedocomponente/g, lowerComponent)
           .replace(/Nomedocomponente/g, capitalizedComponent)
-          .replace(/Descrição do componente informada no momento da geração/g, description);
+          .replace(/currentDate/g, new Date().toLocaleDateString('pt-BR'))
+          .replace(/description_context/g, description);
       };
 
       const copyTemplateFile = (src: string, dest: string, folderType: string) => {

@@ -6,11 +6,11 @@ Using Namespace namespace.nomedocomponente.utils
 Class NomedocomponenteService
    Public Data jResponse as Json
 
-    Public Method new() as Object
-    Public Method getNomedocomponente() as Logical
-    Public Method deleteNomedocomponente() as Logical
-    Public Method putNomedocomponente() as Logical
-    Public Method postNomedocomponente() as Logical
+   Public Method new() as Object
+   Public Method getNomedocomponente() as Json
+   Public Method deleteNomedocomponente() as Logical
+   Public Method putNomedocomponente() as Logical
+   Public Method postNomedocomponente() as Logical
 EndClass
 
 Method new() as Object Class NomedocomponenteService
@@ -30,20 +30,18 @@ Method getNomedocomponente() as Json Class NomedocomponenteService
    EndIf
 Return ::jResponse
 
-Method deleteNomedocomponente() as Json Class NomedocomponenteService
+Method deleteNomedocomponente(cId as Character) as Logical Class NomedocomponenteService
    Local oData as Object
 
    oData := NomedocomponenteData():new("DELETE")
-   oData:deleteNomedocomponente()
+   oData:deleteNomedocomponente(cId)
 
-   If oData:lOk
-      ::jResponse := oData:gtJsonObjResponse()
-   Else
+   If !oData:lOk
       ::jResponse := SetRestFault(oData:GetCode(), oData:GetMessage())
    EndIf
-Return ::jResponse
+Return .T.
 
-Method putNomedocomponente() as Json Class NomedocomponenteService
+Method putNomedocomponente(jBody as Json) as Logical Class NomedocomponenteService
    Local oData as Object
 
    oData := NomedocomponenteData():new("PUT")
@@ -54,17 +52,22 @@ Method putNomedocomponente() as Json Class NomedocomponenteService
    Else
       ::jResponse := SetRestFault(oData:GetCode(), oData:GetMessage())
    EndIf
-Return ::jResponse
 
-Method postNomedocomponente() as Json Class NomedocomponenteService
+   oData := NomedocomponenteData():new("PUT")
+   oData:putNomedocomponente(jBody)
+
+   If !oData:lOk
+      ::jResponse := SetRestFault(oData:GetCode(), oData:GetMessage())
+   EndIf
+Return .T.
+
+Method postNomedocomponente(jBody as Json) as Logical Class NomedocomponenteService
    Local oData as Object
 
    oData := NomedocomponenteData():new("POST")
-   oData:postNomedocomponente()
+   oData:postNomedocomponente(jBody)
 
-   If oData:lOk
-      ::jResponse := oData:gtJsonObjResponse()
-   Else
+   If !oData:lOk
       ::jResponse := SetRestFault(oData:GetCode(), oData:GetMessage())
    EndIf
-Return ::jResponse
+Return .T.

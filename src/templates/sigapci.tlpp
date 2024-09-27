@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------*
 | Func:  SigaPCI                                                       	 |
-| Data:  {{currentDate}}                                                      |
-| Desc:  Função Responsável pela estrutura do Módulo SIGAPCI             |
+| Data:  currentDate                                                      |
+| Desc:  Função Responsável pela estrutura do Módulo SIGAESP             |
 *-----------------------------------------------------------------------*/
 User Function SigaPCI( Par01 )
 	MsApp():New('SIGAESP')

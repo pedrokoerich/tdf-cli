@@ -28,17 +28,43 @@ Method new() as Object Class NomedocomponenteController
 Return self
 
 Method getNomedocomponente() as Logical Class NomedocomponenteController
-   ::jResponse := ::oService:getNomedocomponente()
+   oRest:setKeyHeaderResponse('Content-Type','application/json; charset=utf-8')
+   oRest:setResponse(::oService:getNomedocomponente())
 Return .T.
 
 Method deleteNomedocomponente() as Logical Class NomedocomponenteController
-   ::jResponse := ::oService:deleteNomedocomponente()
+   oRest:setKeyHeaderResponse('Content-Type','application/json; charset=utf-8')
+   oRest:setResponse(::oService:deleteNomedocomponente(oRest:getPathParamsRequest()['id']))
 Return .T.
 
 Method putNomedocomponente() as Logical Class NomedocomponenteController
-   ::jResponse := ::oService:putNomedocomponente()
+   Local cBody as Character
+   Local jBody as Json
+
+   oRest:setKeyHeaderResponse('Content-Type','application/json; charset=utf-8')
+
+   cBody := oRest:getBodyRequest()
+   jBody := JsonObject():New()
+
+   If jBody:FromJson(cBody) == Nil
+      ::oService:putNomedocomponente(jBody)
+   Else
+      setRestFault(400, "Json inválido")
+   EndIf
 Return .T.
 
 Method postNomedocomponente() as Logical Class NomedocomponenteController
-   ::jResponse := ::oService:postNomedocomponente()
+   Local cBody as Character
+   Local jBody as Json
+
+   oRest:setKeyHeaderResponse('Content-Type','application/json; charset=utf-8')
+
+   cBody := oRest:getBodyRequest()
+   jBody := JsonObject():New()
+
+   If jBody:FromJson(cBody) == Nil
+      ::oService:postNomedocomponente(jBody)
+   Else
+      setRestFault(400, "Json inválido")
+   EndIf
 Return .T.
