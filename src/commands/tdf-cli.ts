@@ -20,7 +20,7 @@ const command: GluegunCommand = {
     print.info("   ##########          ##########     ")         
     print.info("     ##########################       ")         
     print.info("       ######################  TOTVS Developer Framework CLI")              
-    print.info("         ################      Versão: 1.0.13")      
+    print.info("         ################      Versão: 1.0.15")      
     print.info("                               Powered by TOTVS SC") 
   },
 };

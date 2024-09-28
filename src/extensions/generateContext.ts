@@ -5,7 +5,7 @@ const iconv = require('iconv-lite');
 const chalk = require('chalk');
 
 module.exports = (toolbox: GluegunToolbox) => {
-  toolbox.generateContext = async (componentName: string) => {
+  toolbox.generateContext = async (contextName: string) => {
     try {
       const projectRoot = findProjectRoot('project-info.json');
       if (!projectRoot) {
@@ -30,22 +30,22 @@ module.exports = (toolbox: GluegunToolbox) => {
         return;
       }
 
-      const baseDir = path.join(process.cwd(), 'src', 'context', componentName);
+      const baseDir = path.join(process.cwd(), 'src', 'context', contextName);
       const folders = ['controller', 'service', 'data', 'utils', 'mvc'];
 
-      const projectRootTemplate = findProjectRoot('bin');
-      const templateDir = path.join(projectRootTemplate, 'src', 'templates');
+      //const projectRootTemplate = findProjectRoot(__dirname);
+      const templateDir = path.join(__dirname, '..', 'templates');
       const templateFiles = {
-        controller: `${namespace}.${componentName}.controller.tlpp`,
-        service: `${namespace}.${componentName}.service.tlpp`,
-        data: `${namespace}.${componentName}.data.tlpp`,
-        utils: `${namespace}.${componentName}.utils.tlpp`,
-        mvc: `${componentName}.mvc.tlpp`,
+        controller: `${namespace}.${contextName}.controller.tlpp`,
+        service: `${namespace}.${contextName}.service.tlpp`,
+        data: `${namespace}.${contextName}.data.tlpp`,
+        utils: `${namespace}.${contextName}.utils.tlpp`,
+        mvc: `${contextName}.mvc.tlpp`,
       };
 
       const replaceDynamicContent = (content: string, folderType: string) => {
-        const capitalizedComponent = componentName.charAt(0).toUpperCase() + componentName.slice(1);
-        const lowerComponent = componentName.toLowerCase();
+        const capitalizedComponent = contextName.charAt(0).toUpperCase() + contextName.slice(1);
+        const lowerComponent = contextName.toLowerCase();
 
         return content
           .replace(/namespace/g, namespace)
@@ -85,7 +85,7 @@ module.exports = (toolbox: GluegunToolbox) => {
         copyTemplateFile(templateFilePath, destFilePath, folder);
       });
 
-      console.log(chalk.green.bold(`✔ Contexto ${componentName} criado com sucesso!`));
+      console.log(chalk.green.bold(`✔ Contexto ${contextName} criado com sucesso!`));
     } catch (error) {
       console.error(chalk.red(`Erro ao criar o contexto: ${error.message}`));
     }
